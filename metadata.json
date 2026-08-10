@@ -1,0 +1,6 @@
+{
+  "name": "InvestPro",
+  "description": "Aplikasi Investasi dengan Landing Page, Super Admin Modal & Return Rate, Deposit, Tarik Saldo, dan Payment Gateway API Otomatis.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
