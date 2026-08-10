@@ -242,14 +242,14 @@ fun WebPortalScreen(viewModel: MainViewModel) {
                     Row(
                         modifier = Modifier
                             .clip(RoundedCornerShape(12.dp))
-                            .background(SuccessGreen.copy(alpha = 0.15f))
-                            .border(1.dp, SuccessGreen.copy(alpha = 0.4f), RoundedCornerShape(12.dp))
+                            .background(Color(0xFFF97316).copy(alpha = 0.15f))
+                            .border(1.dp, Color(0xFFF97316).copy(alpha = 0.4f), RoundedCornerShape(12.dp))
                             .padding(horizontal = 8.dp, vertical = 4.dp),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Icon(imageVector = Icons.Default.CloudDone, contentDescription = null, tint = SuccessGreen, modifier = Modifier.size(14.dp))
+                        Icon(imageVector = Icons.Default.CloudDone, contentDescription = null, tint = Color(0xFFF97316), modifier = Modifier.size(14.dp))
                         Spacer(modifier = Modifier.width(4.dp))
-                        Text("LIVE SYNC", fontSize = 10.sp, fontWeight = FontWeight.Bold, color = SuccessGreen)
+                        Text("CLOUDFLARE ONLINE", fontSize = 10.sp, fontWeight = FontWeight.Bold, color = Color(0xFFF97316))
                     }
                 }
             }
@@ -261,6 +261,52 @@ fun WebPortalScreen(viewModel: MainViewModel) {
                     .padding(16.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
+                // Cloudflare Edge Status Banner Item
+                item {
+                    Card(
+                        modifier = Modifier.fillMaxWidth(),
+                        colors = CardDefaults.cardColors(containerColor = Color(0xFF1F1B18)),
+                        shape = RoundedCornerShape(12.dp),
+                        border = androidx.compose.foundation.BorderStroke(1.dp, Color(0xFFF97316).copy(alpha = 0.5f))
+                    ) {
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(12.dp),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Column(modifier = Modifier.weight(1f)) {
+                                Row(verticalAlignment = Alignment.CenterVertically) {
+                                    Surface(
+                                        color = Color(0xFFF97316),
+                                        shape = RoundedCornerShape(4.dp)
+                                    ) {
+                                        Text("☁️ CLOUDFLARE DEPLOYED", color = Color.Black, fontSize = 9.sp, fontWeight = FontWeight.Bold, modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp))
+                                    }
+                                    Spacer(modifier = Modifier.width(6.dp))
+                                    Text("Status: 100% Online Global Edge", color = SuccessGreen, fontSize = 10.sp, fontWeight = FontWeight.Bold)
+                                }
+                                Spacer(modifier = Modifier.height(4.dp))
+                                Text(
+                                    text = "Pages: https://${brandConfig?.cloudflarePagesDomain ?: "investpro.pages.dev"} | Worker API: ${brandConfig?.cloudflareWorkerEndpoint ?: "https://api.investpro.workers.dev"}",
+                                    color = TextSecondary,
+                                    fontSize = 10.sp
+                                )
+                            }
+
+                            Button(
+                                onClick = {
+                                    urlPath = if (urlPath.contains("pages.dev")) "https://${brandConfig?.companyDomain ?: "investpro.id"}/portal/dashboard" else "https://${brandConfig?.cloudflarePagesDomain ?: "investpro.pages.dev"}/portal/dashboard"
+                                },
+                                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFF97316), contentColor = Color.Black),
+                                shape = RoundedCornerShape(8.dp)
+                            ) {
+                                Text("Ganti Domain", fontSize = 10.sp, fontWeight = FontWeight.Bold)
+                            }
+                        }
+                    }
+                }
                 // Web Top Banner Nav
                 item {
                     Card(

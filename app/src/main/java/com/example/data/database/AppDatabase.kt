@@ -41,7 +41,7 @@ import kotlinx.coroutines.launch
         LuckyWheelConfig::class,
         AuditLogRecord::class
     ],
-    version = 18,
+    version = 19,
     exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {

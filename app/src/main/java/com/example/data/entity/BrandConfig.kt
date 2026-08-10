@@ -34,5 +34,13 @@ data class BrandConfig(
     val smtpEncryption: String = "TLS", // TLS, SSL, NONE
     val smtpSenderEmail: String = "noreply@investpro.id",
     val smtpSenderName: String = "InvestPro Official",
-    val isSmtpActive: Boolean = true
+    val isSmtpActive: Boolean = true,
+    // Cloudflare Deployment & Edge Online Hub Configuration
+    val cloudflareAccountId: String = "cf-acc-88219472910",
+    val cloudflareApiToken: String = "v1.0-cf-token-secure-key-99381",
+    val cloudflarePagesDomain: String = "investpro.pages.dev",
+    val cloudflareWorkerEndpoint: String = "https://api.investpro.workers.dev",
+    val isCloudflareProxyActive: Boolean = true,
+    val isCloudflareTunnelActive: Boolean = true,
+    val cloudflareTunnelUrl: String = "https://investpro-portal.trycloudflare.com"
 )
