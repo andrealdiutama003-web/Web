@@ -48,6 +48,8 @@ import androidx.compose.material.icons.filled.AdminPanelSettings
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.LockReset
+import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material.icons.filled.Phone
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.foundation.rememberScrollState
@@ -92,6 +94,7 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -117,6 +120,7 @@ fun TransactionPinDialog(
 ) {
     var enteredPin by remember { mutableStateOf("") }
     var pinError by remember { mutableStateOf<String?>(null) }
+    var isPinVisible by remember { mutableStateOf(false) }
 
     AlertDialog(
         onDismissRequest = onDismiss,
@@ -141,17 +145,47 @@ fun TransactionPinDialog(
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                // PIN Dots Display
+                // PIN Dots Display with visibility toggle
                 Row(
-                    horizontalArrangement = Arrangement.spacedBy(10.dp),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     for (i in 0 until 6) {
-                        Box(
-                            modifier = Modifier
-                                .size(16.dp)
-                                .clip(CircleShape)
-                                .background(if (i < enteredPin.length) AccentGold else DarkCardBorder)
+                        if (isPinVisible) {
+                            Box(
+                                modifier = Modifier
+                                    .size(28.dp)
+                                    .clip(RoundedCornerShape(6.dp))
+                                    .background(if (i < enteredPin.length) AccentGold.copy(alpha = 0.2f) else DarkCardBorder)
+                                    .border(1.dp, if (i < enteredPin.length) AccentGold else DarkCardBorder, RoundedCornerShape(6.dp)),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Text(
+                                    text = if (i < enteredPin.length) enteredPin[i].toString() else "-",
+                                    color = if (i < enteredPin.length) AccentGold else TextSecondary,
+                                    fontSize = 13.sp,
+                                    fontWeight = FontWeight.Bold
+                                )
+                            }
+                        } else {
+                            Box(
+                                modifier = Modifier
+                                    .size(16.dp)
+                                    .clip(CircleShape)
+                                    .background(if (i < enteredPin.length) AccentGold else DarkCardBorder)
+                            )
+                        }
+                    }
+
+                    IconButton(
+                        onClick = { isPinVisible = !isPinVisible },
+                        modifier = Modifier.size(32.dp).testTag("btn_toggle_pin_vis")
+                    ) {
+                        Icon(
+                            imageVector = if (isPinVisible) Icons.Default.Visibility else Icons.Default.VisibilityOff,
+                            contentDescription = "Lihat PIN Transaksi",
+                            tint = AccentGold,
+                            modifier = Modifier.size(20.dp)
                         )
                     }
                 }
@@ -1231,6 +1265,13 @@ fun AccountRecoveryDialog(
     var generatedOtpCode by remember { mutableStateOf("") }
     var statusMessage by remember { mutableStateOf<String?>(null) }
 
+    // Visibility toggles for recovery fields
+    var isNewPasswordVisible by remember { mutableStateOf(false) }
+    var isNewPinVisible by remember { mutableStateOf(false) }
+    var isMasterKeyVisible by remember { mutableStateOf(false) }
+    var isNewPasscodeVisible by remember { mutableStateOf(false) }
+    var isStaffNewPinVisible by remember { mutableStateOf(false) }
+
     AlertDialog(
         onDismissRequest = onDismiss,
         title = {
@@ -1424,7 +1465,16 @@ fun AccountRecoveryDialog(
                             onValueChange = { newPasswordInput = it },
                             label = { Text("Password Baru Anda") },
                             leadingIcon = { Icon(Icons.Default.Lock, contentDescription = null, tint = TextSecondary) },
-                            visualTransformation = PasswordVisualTransformation(),
+                            trailingIcon = {
+                                IconButton(onClick = { isNewPasswordVisible = !isNewPasswordVisible }) {
+                                    Icon(
+                                        imageVector = if (isNewPasswordVisible) Icons.Default.Visibility else Icons.Default.VisibilityOff,
+                                        contentDescription = "Lihat Password Baru",
+                                        tint = TextSecondary
+                                    )
+                                }
+                            },
+                            visualTransformation = if (isNewPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
                             modifier = Modifier.fillMaxWidth().testTag("input_recovery_new_password"),
                             colors = OutlinedTextFieldDefaults.colors(focusedBorderColor = PrimaryEmerald, unfocusedBorderColor = DarkCardBorder)
                         )
@@ -1501,8 +1551,17 @@ fun AccountRecoveryDialog(
                             onValueChange = { if (it.length <= 6 && it.all { ch -> ch.isDigit() }) newPinInput = it },
                             label = { Text("PIN Transaksi Baru (6 Angka)") },
                             leadingIcon = { Icon(Icons.Default.Key, contentDescription = null, tint = TextSecondary) },
+                            trailingIcon = {
+                                IconButton(onClick = { isNewPinVisible = !isNewPinVisible }) {
+                                    Icon(
+                                        imageVector = if (isNewPinVisible) Icons.Default.Visibility else Icons.Default.VisibilityOff,
+                                        contentDescription = "Lihat PIN Baru",
+                                        tint = TextSecondary
+                                    )
+                                }
+                            },
                             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.NumberPassword),
-                            visualTransformation = PasswordVisualTransformation(),
+                            visualTransformation = if (isNewPinVisible) VisualTransformation.None else PasswordVisualTransformation(),
                             modifier = Modifier.fillMaxWidth().testTag("input_recovery_new_pin"),
                             colors = OutlinedTextFieldDefaults.colors(focusedBorderColor = PrimaryEmerald, unfocusedBorderColor = DarkCardBorder)
                         )
@@ -1645,6 +1704,16 @@ fun AccountRecoveryDialog(
                                     onValueChange = { masterKeyInput = it },
                                     label = { Text("Master Security Key (Default: SUPER2026)") },
                                     leadingIcon = { Icon(Icons.Default.Key, contentDescription = null, tint = TextSecondary) },
+                                    trailingIcon = {
+                                        IconButton(onClick = { isMasterKeyVisible = !isMasterKeyVisible }) {
+                                            Icon(
+                                                imageVector = if (isMasterKeyVisible) Icons.Default.Visibility else Icons.Default.VisibilityOff,
+                                                contentDescription = "Lihat Master Key",
+                                                tint = TextSecondary
+                                            )
+                                        }
+                                    },
+                                    visualTransformation = if (isMasterKeyVisible) VisualTransformation.None else PasswordVisualTransformation(),
                                     modifier = Modifier.fillMaxWidth().testTag("input_recovery_admin_master_key"),
                                     colors = OutlinedTextFieldDefaults.colors(focusedBorderColor = AccentGold, unfocusedBorderColor = DarkCardBorder)
                                 )
@@ -1656,7 +1725,16 @@ fun AccountRecoveryDialog(
                                     onValueChange = { newPasscodeInput = it },
                                     label = { Text("Passcode Super Admin Baru") },
                                     leadingIcon = { Icon(Icons.Default.Lock, contentDescription = null, tint = TextSecondary) },
-                                    visualTransformation = PasswordVisualTransformation(),
+                                    trailingIcon = {
+                                        IconButton(onClick = { isNewPasscodeVisible = !isNewPasscodeVisible }) {
+                                            Icon(
+                                                imageVector = if (isNewPasscodeVisible) Icons.Default.Visibility else Icons.Default.VisibilityOff,
+                                                contentDescription = "Lihat Passcode Baru",
+                                                tint = TextSecondary
+                                            )
+                                        }
+                                    },
+                                    visualTransformation = if (isNewPasscodeVisible) VisualTransformation.None else PasswordVisualTransformation(),
                                     modifier = Modifier.fillMaxWidth().testTag("input_recovery_admin_new_passcode"),
                                     colors = OutlinedTextFieldDefaults.colors(focusedBorderColor = AccentGold, unfocusedBorderColor = DarkCardBorder)
                                 )
@@ -1703,7 +1781,16 @@ fun AccountRecoveryDialog(
                                     onValueChange = { newPinInput = it },
                                     label = { Text("PIN Staff Baru") },
                                     leadingIcon = { Icon(Icons.Default.Lock, contentDescription = null, tint = TextSecondary) },
-                                    visualTransformation = PasswordVisualTransformation(),
+                                    trailingIcon = {
+                                        IconButton(onClick = { isStaffNewPinVisible = !isStaffNewPinVisible }) {
+                                            Icon(
+                                                imageVector = if (isStaffNewPinVisible) Icons.Default.Visibility else Icons.Default.VisibilityOff,
+                                                contentDescription = "Lihat PIN Staff Baru",
+                                                tint = TextSecondary
+                                            )
+                                        }
+                                    },
+                                    visualTransformation = if (isStaffNewPinVisible) VisualTransformation.None else PasswordVisualTransformation(),
                                     modifier = Modifier.fillMaxWidth().testTag("input_recovery_staff_new_pin"),
                                     colors = OutlinedTextFieldDefaults.colors(focusedBorderColor = PrimaryEmerald, unfocusedBorderColor = DarkCardBorder)
                                 )

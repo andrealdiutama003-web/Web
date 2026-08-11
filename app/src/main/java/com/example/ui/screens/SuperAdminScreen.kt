@@ -46,6 +46,8 @@ import androidx.compose.material.icons.filled.Dns
 import androidx.compose.material.icons.filled.Image
 import androidx.compose.material.icons.filled.Link
 import androidx.compose.material.icons.filled.Upload
+import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material.icons.filled.VisibilityOff
 import com.example.ui.components.CompanyLogoView
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
@@ -209,6 +211,12 @@ fun SuperAdminScreen(
     var isSyncingToD1 by remember { mutableStateOf(false) }
     var d1SyncStatusMessage by remember { mutableStateOf("") }
     var showD1SqlSchemaDialog by remember { mutableStateOf(false) }
+
+    // Visibility toggles for API keys, secret tokens, SMTP password, and staff PIN
+    var isCfTokenVisible by remember { mutableStateOf(false) }
+    var isD1SecretVisible by remember { mutableStateOf(false) }
+    var isSmtpPasswordVisible by remember { mutableStateOf(false) }
+    var isStaffDialogPinVisible by remember { mutableStateOf(false) }
 
     val banners by viewModel.allBanners.collectAsState(initial = emptyList())
     var showAddBannerDialog by remember { mutableStateOf(false) }
@@ -1087,7 +1095,16 @@ fun SuperAdminScreen(
                                 onValueChange = { cloudflareApiTokenInput = it },
                                 label = { Text("Cloudflare Global API Token / Worker Key") },
                                 leadingIcon = { Icon(imageVector = Icons.Default.Key, contentDescription = null, tint = TextSecondary) },
-                                visualTransformation = androidx.compose.ui.text.input.PasswordVisualTransformation(),
+                                trailingIcon = {
+                                    IconButton(onClick = { isCfTokenVisible = !isCfTokenVisible }) {
+                                        Icon(
+                                            imageVector = if (isCfTokenVisible) Icons.Default.Visibility else Icons.Default.VisibilityOff,
+                                            contentDescription = "Lihat Token Cloudflare",
+                                            tint = TextSecondary
+                                        )
+                                    }
+                                },
+                                visualTransformation = if (isCfTokenVisible) androidx.compose.ui.text.input.VisualTransformation.None else androidx.compose.ui.text.input.PasswordVisualTransformation(),
                                 modifier = Modifier.fillMaxWidth().testTag("cf_api_token_input"),
                                 colors = OutlinedTextFieldDefaults.colors(focusedBorderColor = Color(0xFFF97316), unfocusedBorderColor = DarkCardBorder)
                             )
@@ -1297,7 +1314,16 @@ fun SuperAdminScreen(
                                 onValueChange = { cloudflareD1SecretTokenInput = it },
                                 label = { Text("Cloudflare D1 Auth Secret Token") },
                                 leadingIcon = { Icon(imageVector = Icons.Default.Key, contentDescription = null, tint = TextSecondary) },
-                                visualTransformation = androidx.compose.ui.text.input.PasswordVisualTransformation(),
+                                trailingIcon = {
+                                    IconButton(onClick = { isD1SecretVisible = !isD1SecretVisible }) {
+                                        Icon(
+                                            imageVector = if (isD1SecretVisible) Icons.Default.Visibility else Icons.Default.VisibilityOff,
+                                            contentDescription = "Lihat Token D1",
+                                            tint = TextSecondary
+                                        )
+                                    }
+                                },
+                                visualTransformation = if (isD1SecretVisible) androidx.compose.ui.text.input.VisualTransformation.None else androidx.compose.ui.text.input.PasswordVisualTransformation(),
                                 modifier = Modifier.fillMaxWidth().testTag("cf_d1_token_input"),
                                 colors = OutlinedTextFieldDefaults.colors(focusedBorderColor = PrimaryEmerald, unfocusedBorderColor = DarkCardBorder)
                             )
@@ -1664,6 +1690,16 @@ fun SuperAdminScreen(
                                         OutlinedTextField(
                                             value = smtpPasswordInput,
                                             onValueChange = { smtpPasswordInput = it },
+                                            trailingIcon = {
+                                                IconButton(onClick = { isSmtpPasswordVisible = !isSmtpPasswordVisible }) {
+                                                    Icon(
+                                                        imageVector = if (isSmtpPasswordVisible) Icons.Default.Visibility else Icons.Default.VisibilityOff,
+                                                        contentDescription = "Lihat Password SMTP",
+                                                        tint = TextSecondary
+                                                    )
+                                                }
+                                            },
+                                            visualTransformation = if (isSmtpPasswordVisible) androidx.compose.ui.text.input.VisualTransformation.None else androidx.compose.ui.text.input.PasswordVisualTransformation(),
                                             modifier = Modifier.fillMaxWidth().testTag("smtp_password_input"),
                                             shape = RoundedCornerShape(8.dp),
                                             colors = OutlinedTextFieldDefaults.colors(focusedBorderColor = AccentGold, unfocusedBorderColor = DarkCardBorder),
@@ -3466,6 +3502,17 @@ fun SuperAdminScreen(
                         value = staffPinForm,
                         onValueChange = { staffPinForm = it },
                         label = { Text("PIN / Password Staff") },
+                        leadingIcon = { Icon(Icons.Default.Key, contentDescription = null, tint = TextSecondary) },
+                        trailingIcon = {
+                            IconButton(onClick = { isStaffDialogPinVisible = !isStaffDialogPinVisible }) {
+                                Icon(
+                                    imageVector = if (isStaffDialogPinVisible) Icons.Default.Visibility else Icons.Default.VisibilityOff,
+                                    contentDescription = "Lihat PIN Staff",
+                                    tint = TextSecondary
+                                )
+                            }
+                        },
+                        visualTransformation = if (isStaffDialogPinVisible) androidx.compose.ui.text.input.VisualTransformation.None else androidx.compose.ui.text.input.PasswordVisualTransformation(),
                         shape = RoundedCornerShape(10.dp),
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.NumberPassword),
                         modifier = Modifier.fillMaxWidth().testTag("dialog_staff_pin")

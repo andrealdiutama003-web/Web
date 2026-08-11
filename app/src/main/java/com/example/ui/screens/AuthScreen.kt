@@ -33,12 +33,15 @@ import androidx.compose.material.icons.filled.PersonAdd
 import androidx.compose.material.icons.filled.Phone
 import androidx.compose.material.icons.filled.Security
 import androidx.compose.material.icons.filled.SupportAgent
+import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material.icons.filled.VisibilityOff
 import com.example.ui.components.CompanyLogoView
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
@@ -58,6 +61,7 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.ui.theme.AccentGold
@@ -93,6 +97,11 @@ fun AuthScreen(viewModel: MainViewModel) {
     var staffCodeInput by remember { mutableStateOf("") }
     var staffPinInput by remember { mutableStateOf("") }
     var showBiometricAuthDialog by remember { mutableStateOf(false) }
+
+    // Password & credential visibility toggles
+    var isPasswordVisible by remember { mutableStateOf(false) }
+    var isMasterKeyVisible by remember { mutableStateOf(false) }
+    var isStaffPinVisible by remember { mutableStateOf(false) }
 
     LazyColumn(
         modifier = Modifier
@@ -303,7 +312,16 @@ fun AuthScreen(viewModel: MainViewModel) {
                                 onValueChange = { passwordInput = it },
                                 label = { Text("Password") },
                                 leadingIcon = { Icon(Icons.Default.Lock, contentDescription = null, tint = TextSecondary) },
-                                visualTransformation = PasswordVisualTransformation(),
+                                trailingIcon = {
+                                    IconButton(onClick = { isPasswordVisible = !isPasswordVisible }) {
+                                        Icon(
+                                            imageVector = if (isPasswordVisible) Icons.Default.Visibility else Icons.Default.VisibilityOff,
+                                            contentDescription = "Lihat Password",
+                                            tint = TextSecondary
+                                        )
+                                    }
+                                },
+                                visualTransformation = if (isPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
                                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
                                 modifier = Modifier.fillMaxWidth().testTag("input_individual_password"),
                                 colors = OutlinedTextFieldDefaults.colors(focusedBorderColor = PrimaryEmerald, unfocusedBorderColor = DarkCardBorder, focusedLabelColor = PrimaryEmerald, unfocusedLabelColor = TextSecondary)
@@ -423,7 +441,16 @@ fun AuthScreen(viewModel: MainViewModel) {
                                 onValueChange = { passwordInput = it },
                                 label = { Text("Password Perusahaan") },
                                 leadingIcon = { Icon(Icons.Default.Lock, contentDescription = null, tint = TextSecondary) },
-                                visualTransformation = PasswordVisualTransformation(),
+                                trailingIcon = {
+                                    IconButton(onClick = { isPasswordVisible = !isPasswordVisible }) {
+                                        Icon(
+                                            imageVector = if (isPasswordVisible) Icons.Default.Visibility else Icons.Default.VisibilityOff,
+                                            contentDescription = "Lihat Password Perusahaan",
+                                            tint = TextSecondary
+                                        )
+                                    }
+                                },
+                                visualTransformation = if (isPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
                                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
                                 modifier = Modifier.fillMaxWidth().testTag("input_company_password"),
                                 colors = OutlinedTextFieldDefaults.colors(focusedBorderColor = PrimaryEmerald, unfocusedBorderColor = DarkCardBorder, focusedLabelColor = PrimaryEmerald, unfocusedLabelColor = TextSecondary)
@@ -503,6 +530,16 @@ fun AuthScreen(viewModel: MainViewModel) {
                                     onValueChange = { masterKeyInput = it },
                                     label = { Text("Master Security Key (Contoh: SUPER2026)") },
                                     leadingIcon = { Icon(Icons.Default.Key, contentDescription = null, tint = TextSecondary) },
+                                    trailingIcon = {
+                                        IconButton(onClick = { isMasterKeyVisible = !isMasterKeyVisible }) {
+                                            Icon(
+                                                imageVector = if (isMasterKeyVisible) Icons.Default.Visibility else Icons.Default.VisibilityOff,
+                                                contentDescription = "Lihat Master Key",
+                                                tint = TextSecondary
+                                            )
+                                        }
+                                    },
+                                    visualTransformation = if (isMasterKeyVisible) VisualTransformation.None else PasswordVisualTransformation(),
                                     modifier = Modifier.fillMaxWidth().testTag("input_admin_master_key"),
                                     colors = OutlinedTextFieldDefaults.colors(focusedBorderColor = AccentGold, unfocusedBorderColor = DarkCardBorder, focusedLabelColor = AccentGold, unfocusedLabelColor = TextSecondary)
                                 )
@@ -524,7 +561,16 @@ fun AuthScreen(viewModel: MainViewModel) {
                                 onValueChange = { passwordInput = it },
                                 label = { Text("Passcode Super Admin (Default: admin123)") },
                                 leadingIcon = { Icon(Icons.Default.Lock, contentDescription = null, tint = TextSecondary) },
-                                visualTransformation = PasswordVisualTransformation(),
+                                trailingIcon = {
+                                    IconButton(onClick = { isPasswordVisible = !isPasswordVisible }) {
+                                        Icon(
+                                            imageVector = if (isPasswordVisible) Icons.Default.Visibility else Icons.Default.VisibilityOff,
+                                            contentDescription = "Lihat Passcode",
+                                            tint = TextSecondary
+                                        )
+                                    }
+                                },
+                                visualTransformation = if (isPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
                                 modifier = Modifier.fillMaxWidth().testTag("input_admin_passcode"),
                                 colors = OutlinedTextFieldDefaults.colors(focusedBorderColor = AccentGold, unfocusedBorderColor = DarkCardBorder, focusedLabelColor = AccentGold, unfocusedLabelColor = TextSecondary)
                             )
@@ -590,7 +636,16 @@ fun AuthScreen(viewModel: MainViewModel) {
                                 onValueChange = { staffPinInput = it },
                                 label = { Text("PIN / Password Staff (Default: 123456)") },
                                 leadingIcon = { Icon(Icons.Default.Key, contentDescription = null, tint = TextSecondary) },
-                                visualTransformation = PasswordVisualTransformation(),
+                                trailingIcon = {
+                                    IconButton(onClick = { isStaffPinVisible = !isStaffPinVisible }) {
+                                        Icon(
+                                            imageVector = if (isStaffPinVisible) Icons.Default.Visibility else Icons.Default.VisibilityOff,
+                                            contentDescription = "Lihat PIN Staff",
+                                            tint = TextSecondary
+                                        )
+                                    }
+                                },
+                                visualTransformation = if (isStaffPinVisible) VisualTransformation.None else PasswordVisualTransformation(),
                                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.NumberPassword),
                                 modifier = Modifier.fillMaxWidth().testTag("input_staff_pin"),
                                 colors = OutlinedTextFieldDefaults.colors(focusedBorderColor = AccentGold, unfocusedBorderColor = DarkCardBorder, focusedLabelColor = AccentGold, unfocusedLabelColor = TextSecondary)
