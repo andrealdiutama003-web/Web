@@ -42,5 +42,11 @@ data class BrandConfig(
     val cloudflareWorkerEndpoint: String = "https://api.investpro.workers.dev",
     val isCloudflareProxyActive: Boolean = true,
     val isCloudflareTunnelActive: Boolean = true,
-    val cloudflareTunnelUrl: String = "https://investpro-portal.trycloudflare.com"
+    val cloudflareTunnelUrl: String = "https://investpro-portal.trycloudflare.com",
+    // Cloudflare D1 SQLite Database Integration
+    val cloudflareD1DatabaseId: String = "d1-db-88219472-investpro",
+    val cloudflareD1DatabaseName: String = "investpro-d1-db",
+    val cloudflareD1BindingName: String = "DB",
+    val isD1AutoSyncEnabled: Boolean = true,
+    val cloudflareD1SecretToken: String = "d1-secret-token-key-investpro"
 )

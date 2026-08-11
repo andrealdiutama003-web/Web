@@ -289,9 +289,9 @@ fun WebPortalScreen(viewModel: MainViewModel) {
                                 }
                                 Spacer(modifier = Modifier.height(4.dp))
                                 Text(
-                                    text = "Pages: https://${brandConfig?.cloudflarePagesDomain ?: "investpro.pages.dev"} | Worker API: ${brandConfig?.cloudflareWorkerEndpoint ?: "https://api.investpro.workers.dev"}",
+                                    text = "Pages: https://${brandConfig?.cloudflarePagesDomain ?: "investpro.pages.dev"} | Worker API: ${brandConfig?.cloudflareWorkerEndpoint ?: "https://api.investpro.workers.dev"} | D1 DB: env.${brandConfig?.cloudflareD1BindingName ?: "DB"} (${brandConfig?.cloudflareD1DatabaseName ?: "investpro-d1-db"})",
                                     color = TextSecondary,
-                                    fontSize = 10.sp
+                                    fontSize = 9.sp
                                 )
                             }
 
