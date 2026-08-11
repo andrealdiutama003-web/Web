@@ -285,11 +285,11 @@ fun WebPortalScreen(viewModel: MainViewModel) {
                                         Text("☁️ CLOUDFLARE DEPLOYED", color = Color.Black, fontSize = 9.sp, fontWeight = FontWeight.Bold, modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp))
                                     }
                                     Spacer(modifier = Modifier.width(6.dp))
-                                    Text("Status: 100% Online Global Edge", color = SuccessGreen, fontSize = 10.sp, fontWeight = FontWeight.Bold)
+                                    Text("Status: 🟢 ONLINE (GitHub Auto-Deploy Active)", color = SuccessGreen, fontSize = 10.sp, fontWeight = FontWeight.Bold)
                                 }
                                 Spacer(modifier = Modifier.height(4.dp))
                                 Text(
-                                    text = "Pages: https://${brandConfig?.cloudflarePagesDomain ?: "investpro.pages.dev"} | Worker API: ${brandConfig?.cloudflareWorkerEndpoint ?: "https://api.investpro.workers.dev"} | D1 DB: env.${brandConfig?.cloudflareD1BindingName ?: "DB"} (${brandConfig?.cloudflareD1DatabaseName ?: "investpro-d1-db"})",
+                                    text = "GitHub: ${brandConfig?.githubRepoUrl ?: "https://github.com/investpro/investpro-web-portal"} (${brandConfig?.githubBranch ?: "main"}) | Pages: https://${brandConfig?.cloudflarePagesDomain ?: "investpro.pages.dev"} | Deploy: ${brandConfig?.lastCloudflareDeployTimestamp ?: "Auto-Deployed"}",
                                     color = TextSecondary,
                                     fontSize = 9.sp
                                 )

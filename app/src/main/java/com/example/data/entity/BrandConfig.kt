@@ -48,5 +48,12 @@ data class BrandConfig(
     val cloudflareD1DatabaseName: String = "investpro-d1-db",
     val cloudflareD1BindingName: String = "DB",
     val isD1AutoSyncEnabled: Boolean = true,
-    val cloudflareD1SecretToken: String = "d1-secret-token-key-investpro"
+    val cloudflareD1SecretToken: String = "d1-secret-token-key-investpro",
+    // GitHub Repository & Cloudflare Pages CI/CD Auto-Online Integration
+    val githubRepoUrl: String = "https://github.com/investpro/investpro-web-portal",
+    val githubBranch: String = "main",
+    val isGithubCloudflareAutoDeploy: Boolean = true,
+    val isAutoOnlineOnDeployEnabled: Boolean = true,
+    val lastCloudflareDeployTimestamp: String = "2026-08-11 05:00 UTC (Auto-Deployed via GitHub main)",
+    val cloudflareDeployStatus: String = "ONLINE"
 )
